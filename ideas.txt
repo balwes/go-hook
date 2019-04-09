@@ -1,0 +1,9 @@
+Something to store game and level ideas.
+
+Pot - breaks
+Dirt block - pulls you to it
+Steel block - gets pushed
+Crate - pulled toward you
+Steel triangle - bounces
+
+buttons - pushing them all down/up opens a door
