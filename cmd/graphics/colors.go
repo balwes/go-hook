@@ -3,7 +3,7 @@ package graphics
 import (
 	"github.com/veandco/go-sdl2/sdl"
 	"math/rand"
-	"github.com/balwes/hook/cmd/math"
+	"github.com/balwes/go-hook/cmd/math"
 )
 
 var (
@@ -46,5 +46,12 @@ func RandomColor() sdl.Color {
 	r := uint8(math.Round(rand.Float32() * 255.0))
 	g := uint8(math.Round(rand.Float32() * 255.0))
 	b := uint8(math.Round(rand.Float32() * 255.0))
+	return sdl.Color{r,g,b,255}
+}
+
+func MultiplyColor(c sdl.Color, f float32) sdl.Color {
+	r := uint8(math.Clamp(float32(c.R) * f, 0, 255))
+	g := uint8(math.Clamp(float32(c.G) * f, 0, 255))
+	b := uint8(math.Clamp(float32(c.B) * f, 0, 255))
 	return sdl.Color{r,g,b,255}
 }

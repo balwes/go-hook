@@ -1,8 +1,16 @@
 package math
 
+import (
+	"fmt"
+)
+
 type Point struct {
 	X float32
 	Y float32
+}
+
+func (p Point) String() string {
+	return fmt.Sprintf("Point{%f,%f}", p.X, p.Y)
 }
 
 type Circle struct {

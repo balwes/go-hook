@@ -3,8 +3,8 @@ package graphics
 import (
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/gfx"
-	"github.com/balwes/hook/cmd/math"
-	"github.com/balwes/hook/cmd/util"
+	"github.com/balwes/go-hook/cmd/math"
+	"github.com/balwes/go-hook/cmd/util"
 )
 
 func DrawPoint(cam *math.Camera, p *math.Point, color sdl.Color, size float32) {
@@ -98,7 +98,7 @@ func DrawRoundedRect(cam *math.Camera, r *math.Rect, radius float32, color sdl.C
 	util.PanicIfFalse(ok)
 }
 
-func DrawRoundedRectWithOutline(cam *math.Camera, r *math.Rect, radius float32, color sdl.Color, thickness float32, lightenInnerRect bool) {
+func DrawRoundedRectOutline(cam *math.Camera, r *math.Rect, radius float32, color sdl.Color, thickness float32, lightenInnerRect bool) {
 	// r is the outer rectangle
 	inner := &math.Rect{
 		r.X + thickness,
@@ -162,10 +162,9 @@ func (s *Sprite) Height() float32 {
 }
 
 func (s Sprite) Draw(cam *math.Camera) {
-	x := math.Round(s.X*cam.GetZoom()-cam.X)
-	y := math.Round(s.Y*cam.GetZoom()-cam.Y)
-	w := math.Round(float32( s.textureWidth)*cam.GetZoom())
-	h := math.Round(float32(s.textureHeight)*cam.GetZoom())
+	x, y := cam.WorldToScreen(s.X, s.Y)
+	w := math.Round(float32( s.textureWidth) * cam.GetZoom() * s.ScaleX)
+	h := math.Round(float32(s.textureHeight) * cam.GetZoom() * s.ScaleY)
 	src := sdl.Rect{0, 0, s.textureWidth, s.textureHeight}
 	dst := sdl.Rect{x, y, w, h}
 	util.PanicIfNotNil(cam.Renderer.Copy(s.texture, &src, &dst))
