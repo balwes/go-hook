@@ -2,7 +2,7 @@ package world
 
 import (
 	"log"
-	"github.com/balwes/hook/cmd/math"
+	"github.com/balwes/go-hook/cmd/math"
 )
 
 type World struct {
@@ -40,8 +40,6 @@ func (world *World) Update(dt float32) {
 		switch e.kind {
 			case GuyEntity:
 				//
-			case WallEntity:
-				//
 			default:
 				log.Fatalf("Tried to update unknown entity %v\n", e)
 		}
@@ -63,8 +61,6 @@ func (world *World) Draw(cam *math.Camera) {
 	for _,e := range world.entities {
 		switch e.kind {
 			case GuyEntity:
-				e.Sprite.Draw(cam)
-			case WallEntity:
 				e.Sprite.Draw(cam)
 			default:
 				log.Fatalf("Tried to draw unknown entity %v\n", e)

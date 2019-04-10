@@ -2,9 +2,8 @@ package world
 
 import (
 	"fmt"
-	"strings"
-	"github.com/balwes/hook/cmd/graphics"
-	"github.com/balwes/hook/cmd/util"
+	"github.com/balwes/go-hook/cmd/graphics"
+	"github.com/balwes/go-hook/cmd/util"
 )
 
 type EntityKind int
@@ -12,28 +11,26 @@ type EntityKind int
 const (
 	UnknownEntity  EntityKind = iota
 	GuyEntity
-	WallEntity
+	DirtEntity
+	PotEntity
+	SteelEntity
+	CrateEntity
 )
 
 func EntityKindToString(kind EntityKind) string {
 	switch kind {
 		case GuyEntity:
 			return "Guy"
-		case WallEntity:
-			return "Wall"
+		case DirtEntity:
+			return "Dirt"
+		case PotEntity:
+			return "Pot"
+		case SteelEntity:
+			return "Steel"
+		case CrateEntity:
+			return "Crate"
 		default:
 			return fmt.Sprintf("Unknown (%d)", kind)
-	}
-}
-
-func StringToEntityKind(kind string) EntityKind {
-	switch strings.ToLower(kind) {
-		case "guy":
-			return GuyEntity
-		case "wall":
-			return WallEntity
-		default:
-			return UnknownEntity
 	}
 }
 
@@ -53,15 +50,6 @@ func NewGuy(x, y float32) *Entity {
 	e.id     = -1
 	e.kind   = GuyEntity
 	e.Sprite = graphics.NewSprite(util.GetTexture("assets/images/guy.png"), x, y)
-	e.IsDestroyed = false
-	return &e
-}
-
-func NewWall(x, y float32) *Entity {
-	e := Entity{}
-	e.id     = -1
-	e.kind   = WallEntity
-	e.Sprite = graphics.NewSprite(util.GetTexture("assets/images/wall.png"), x, y)
 	e.IsDestroyed = false
 	return &e
 }
