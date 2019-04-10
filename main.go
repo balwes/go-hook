@@ -49,14 +49,15 @@ func main() {
 
 	util.InitCatalog(renderer)
 	defer util.DestroyCatalog()
-
-	math  .GameWindow = window
-	editor.GameWindow = window
-
+	
 	ww, wh := window.GetSize()
 	worldCam = math.NewCamera(float32(ww)/2, float32(wh)/2, renderer)
 	hudCam = math.NewCamera(0, 0, renderer)
-	editor.HudCam = hudCam
+	
+	math  .GameWindow = window
+	editor.GameWindow = window
+	editor.HudCam     = hudCam
+	editor.WorldCam   = worldCam
 	editor.InitEditor()
 
 	tmxPath := "assets/maps/map.tmx"

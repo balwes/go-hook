@@ -2,7 +2,14 @@ package util
 
 import (
 	"strconv"
+	"reflect"
 )
+
+func PanicIfNil(v interface{}) {
+	if v == nil || (reflect.ValueOf(v).Kind() == reflect.Ptr && reflect.ValueOf(v).IsNil()) {
+		panic("Expected a non-nil value")
+	}
+}
 
 func PanicIfNotNil(e error) {
 	if e != nil {

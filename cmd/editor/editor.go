@@ -1,7 +1,6 @@
 package editor
 
 import (
-	"log"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/balwes/go-hook/cmd/math"
 	"github.com/balwes/go-hook/cmd/graphics"
@@ -9,13 +8,19 @@ import (
 	"github.com/balwes/go-hook/cmd/world"
 )
 
+var gameWorld               *world.World
 var entityKindSelector  *graphics.ButtonGroup
 var currentEntityKind   world.EntityKind
 
 func InitEditor() {
+	util.PanicIfNil(GameWindow)
+	util.PanicIfNil(HudCam)
+	util.PanicIfNil(WorldCam)
+
+	gameWorld = world.NewWorld("")
 	entityKindSelector = graphics.NewButtonGroup()
 
-	{ // Guy entity selector button
+	{ // Entity kind selector buttons
 		const ButtonSize = 50
 		ButtonColor := graphics.ColorGoldenrod
 
@@ -73,8 +78,14 @@ func HandleEvent(event sdl.Event) {
 			if t.Button == sdl.BUTTON_LEFT && t.State == sdl.PRESSED {
 				mx, my := HudCam.ScreenToWorld(t.X, t.Y)
 				clicked := entityKindSelector.TrySelect(mx, my)
-				if !clicked {
-					currentEntityKind = world.UnknownEntity
+				if !clicked && currentEntityKind != world.UnknownEntity {
+					wx, wy := WorldCam.ScreenToWorld(t.X, t.Y)
+					r := math.Round(wy / world.TileSizeF - 0.5) * world.TileSize
+					c := math.Round(wx / world.TileSizeF - 0.5) * world.TileSize
+					e := world.NewEntity(float32(c), float32(r), currentEntityKind)
+					e.Sprite.ScaleX = 0.25 // @TODO yeah this sucks, but where should this happen?
+					e.Sprite.ScaleY = 0.25 // @TODO yeah this sucks, but where should this happen?
+					gameWorld.AddEntity(e)
 				}
 			}
 		//case *sdl.MouseMotionEvent:
@@ -87,10 +98,11 @@ func HandleEvent(event sdl.Event) {
 }
 
 func Update(dt float32) {
-	log.Printf(world.EntityKindToString(currentEntityKind))
+	//log.Printf(world.EntityKindToString(currentEntityKind))
 }
 
 func Draw(worldCam *math.Camera, dt float32) {
+	gameWorld.Draw(WorldCam)
 	entityKindSelector.Draw(HudCam)
 	rect  := &math.Rect{0, 0, 100, 100}
 	color := sdl.Color{20,180,70,255}

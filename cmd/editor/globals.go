@@ -5,5 +5,6 @@ import (
 	"github.com/balwes/go-hook/cmd/math"
 )
 
-var HudCam *math.Camera
-var GameWindow *sdl.Window
+var GameWindow  *sdl.Window
+var HudCam      *math.Camera
+var WorldCam    *math.Camera
