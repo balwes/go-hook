@@ -5,6 +5,9 @@ import (
 	"github.com/balwes/go-hook/cmd/math"
 )
 
+const TileSize  = 32
+const TileSizeF = float32(TileSize)
+
 type World struct {
 	Path string
 	entities []*Entity
@@ -59,11 +62,6 @@ func (world *World) Update(dt float32) {
 
 func (world *World) Draw(cam *math.Camera) {
 	for _,e := range world.entities {
-		switch e.kind {
-			case GuyEntity:
-				e.Sprite.Draw(cam)
-			default:
-				log.Fatalf("Tried to draw unknown entity %v\n", e)
-		}
+		e.Sprite.Draw(cam)
 	}
 }
