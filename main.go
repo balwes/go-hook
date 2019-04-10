@@ -6,11 +6,11 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 	"time"
 	"log"
-	"github.com/balwes/hook/cmd/editor"
-	"github.com/balwes/hook/cmd/world"
-	"github.com/balwes/hook/cmd/math"
-	"github.com/balwes/hook/cmd/util"
-	"github.com/balwes/hook/cmd/graphics"
+	"github.com/balwes/go-hook/cmd/editor"
+	"github.com/balwes/go-hook/cmd/world"
+	"github.com/balwes/go-hook/cmd/math"
+	"github.com/balwes/go-hook/cmd/util"
+	"github.com/balwes/go-hook/cmd/graphics"
 )
 
 var window     *sdl.Window
@@ -46,15 +46,18 @@ func main() {
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	util.PanicIfNotNil(err)
 	defer renderer.Destroy()
-	math  .GameWindow = window
-	editor.GameWindow = window
-
-	worldCam = math.NewCamera(0, 0, renderer)
-	ww, wh := window.GetSize()
-	hudCam = math.NewCamera(-float32(ww)/2, -float32(wh)/2, renderer)
 
 	util.InitCatalog(renderer)
 	defer util.DestroyCatalog()
+
+	math  .GameWindow = window
+	editor.GameWindow = window
+
+	ww, wh := window.GetSize()
+	worldCam = math.NewCamera(float32(ww)/2, float32(wh)/2, renderer)
+	hudCam = math.NewCamera(0, 0, renderer)
+	editor.HudCam = hudCam
+	editor.InitEditor()
 
 	tmxPath := "assets/maps/map.tmx"
 	gameWorld = world.NewWorld(tmxPath)
@@ -151,7 +154,7 @@ func draw(dt float32) {
 	bg := graphics.ColorSky
 	worldCam.Renderer.SetDrawColor(bg.R, bg.G, bg.B, 255)
 	util.PanicIfNotNil(worldCam.Renderer.Clear())
-	editor.Draw(worldCam, hudCam, dt)
+	editor.Draw(worldCam, dt)
 	//
 	//world.Draw(camera)
 	//t := &Triangle{0,0,10,10,10,0}
