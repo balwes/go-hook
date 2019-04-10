@@ -6,8 +6,8 @@ import (
 )
 
 type Camera struct {
-	X        float32
-	Y        float32
+	X        float32 // @TODO rename these XOrigin or something.
+	Y        float32 // @TODO rename these YOrigin or something.
 	MinZoom  float32
 	MaxZoom  float32
 	zoom     float32
@@ -34,16 +34,14 @@ func (cam *Camera) SetZoom(zoom float32) {
 }
 
 func (cam *Camera) WorldToScreen(x, y float32) (int32, int32) {
-	ww, wh := GameWindow.GetSize()
-	screenX := Round(x * cam.GetZoom() + cam.X + float32(ww)/2)
-	screenY := Round(y * cam.GetZoom() + cam.Y + float32(wh)/2)
+	screenX := Round(x * cam.GetZoom() + cam.X)
+	screenY := Round(y * cam.GetZoom() + cam.Y)
 	return screenX, screenY
 }
 
 func (cam *Camera) ScreenToWorld(x, y int32) (float32, float32) {
-	ww, wh := GameWindow.GetSize()
-	worldX := (float32(x) + cam.X - float32(ww)/2) / cam.GetZoom()
-	worldY := (float32(y) + cam.Y - float32(wh)/2) / cam.GetZoom()
+	worldX := (float32(x) - cam.X) / cam.GetZoom()
+	worldY := (float32(y) - cam.Y) / cam.GetZoom()
 	return worldX, worldY
 }
 
