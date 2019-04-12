@@ -6,7 +6,6 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 	"time"
 	"log"
-	"github.com/balwes/go-hook/cmd/editor"
 	"github.com/balwes/go-hook/cmd/world"
 	"github.com/balwes/go-hook/cmd/math"
 	"github.com/balwes/go-hook/cmd/util"
@@ -54,17 +53,13 @@ func main() {
 	worldCam = math.NewCamera(float32(ww)/2, float32(wh)/2, renderer)
 	hudCam = math.NewCamera(0, 0, renderer)
 	
-	math  .GameWindow = window
-	editor.GameWindow = window
-	editor.HudCam     = hudCam
-	editor.WorldCam   = worldCam
-	editor.InitEditor()
+	math.GameWindow = window
 
 	tmxPath := "assets/maps/map.tmx"
 	gameWorld = world.NewWorld(tmxPath)
-	//WatchFile(tmxPath, func(path string) {
-	//	gameWorld = NewWorld(tmxPath)
-	//})
+	util.WatchFile(tmxPath, func(path string) {
+		gameWorld = world.NewWorld(tmxPath)
+	})
 
 	rect = &math.Rect{300,300,100,150}
 
@@ -123,7 +118,6 @@ func handleEvents(dt float32) {
 					//worldCam.ZoomTowards(zoomAmount, wx, wy)
 				}
 		}
-		editor.HandleEvent(event)
 	}
 	if len(gameWorld.GetEntitiesByKind(world.GuyEntity)) > 0 {
 		kb := sdl.GetKeyboardState()
@@ -147,17 +141,15 @@ func handleEvents(dt float32) {
 }
 
 func update(dt float32) {
-	editor.Update(dt)
-	//world.Update(dt)
+	gameWorld.Update(dt)
 }
 
 func draw(dt float32) {
 	bg := graphics.ColorSky
 	worldCam.Renderer.SetDrawColor(bg.R, bg.G, bg.B, 255)
 	util.PanicIfNotNil(worldCam.Renderer.Clear())
-	editor.Draw(worldCam, dt)
 	//
-	//world.Draw(camera)
+	gameWorld.Draw(worldCam)
 	//t := &Triangle{0,0,10,10,10,0}
 	//DrawTriangle(camera, t, ColorBlue, true)
 	//c := &Circle{600,300,30}
