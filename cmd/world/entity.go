@@ -2,6 +2,7 @@ package world
 
 import (
 	"fmt"
+	"strings"
 	"log"
 	"github.com/balwes/go-hook/cmd/graphics"
 	"github.com/balwes/go-hook/cmd/util"
@@ -32,6 +33,24 @@ func EntityKindToString(kind EntityKind) string {
 			return "Crate"
 		default:
 			return fmt.Sprintf("Unknown (%d)", kind)
+	}
+}
+
+func StringToEntityKind(kind string) EntityKind {
+	kind = strings.ToLower(kind)
+	switch kind {
+		case "guy":
+			return GuyEntity
+		case "dirt":
+			return DirtEntity
+		case "pot":
+			return PotEntity
+		case "steel":
+			return SteelEntity
+		case "crate":
+			return CrateEntity
+		default:
+			return UnknownEntity
 	}
 }
 
