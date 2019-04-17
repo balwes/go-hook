@@ -167,19 +167,19 @@ func (world *World) addObjectsFromTmx() {
 			w := float32(object.Width)
 			h := float32(object.Height)
 			kind := StringToEntityKind(object.Type)
-		
+
 			if kind == UnknownEntity {
 				log.Printf("Unknown entity at (%f,%f) won't be added\n", x, y)
+			} else if !math.FloatIsWhole(x / TileSizeF) || !math.FloatIsWhole(y / TileSizeF) {
+					log.Printf("%s with bad position (%f,%f) won't be added (must be a multiple of %d)\n", object.Type, x, y, TileSize)
+			} else if w != TileSizeF || h != TileSizeF {
+				log.Printf("%s with bad size at (%f,%f) won't be added (must be (%d,%d))\n", object.Type, x, y, TileSize, TileSize)
 			} else {
-				if !math.FloatIsWhole(x) || !math.FloatIsWhole(y) {
-					log.Printf("%s with non-integer position (%f,%f) won't be added\n", object.Type, x, y)
-				} else if w != TileSizeF || h != TileSizeF {
-					log.Printf("%s with bad size at (%f,%f) won't be added (must be (%d,%d))\n", object.Type, x, y, TileSize, TileSize)
-				} else {
-					e := NewEntity(x, y, kind)
-					e.Sprite.Y -= h // Why?
-					world.AddEntity(e)
-				}
+				e := NewEntity(x, y, kind)
+				e.Sprite.ScaleX = (w / TileSizeF) * (w / e.Sprite. Width())
+				e.Sprite.ScaleY = (h / TileSizeF) * (h / e.Sprite.Height())
+				e.Sprite.Y -= h // Why?
+				world.AddEntity(e)
 			}
 		}
 	}
